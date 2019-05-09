@@ -18,7 +18,7 @@ email: 1377699408@qq.com
 description: >- # this means to ignore newlines until "baseurl:"
   技术 做饭 生活 感想
 baseurl: "/iblog" # the subpath of your site, e.g. /blog
-url: "http://blog.azhangbaobao.cn/iblog" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://blog.azhangbaobao.cn" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: cheungchan
 github_username:  cheungchan
 
