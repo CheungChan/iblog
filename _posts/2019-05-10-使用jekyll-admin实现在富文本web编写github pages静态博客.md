@@ -1,6 +1,8 @@
 ---
 title: 使用jekyll-admin实现在富文本web编写github pages静态博客
 layout: post
+date: '2019-05-10 16:15:33'
+categories: 技术  jekyll  博客
 ---
 
 ## 简介
