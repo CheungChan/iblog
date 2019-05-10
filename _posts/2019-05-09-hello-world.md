@@ -9,3 +9,4 @@ while True:
     print("I love you")
 
 ```
+![avatar](/img/1.jpg) 
