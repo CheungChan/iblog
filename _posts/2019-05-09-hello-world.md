@@ -1,6 +1,6 @@
 ---
-layout: post
 title: Hello World
+layout: post
 ---
 
 # This is a test
@@ -9,4 +9,3 @@ while True:
     print("I love you")
 
 ```
-![avatar](/img/1.jpg) 
