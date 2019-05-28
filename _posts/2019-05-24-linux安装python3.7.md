@@ -1,8 +1,9 @@
 ---
 title: linux安装python3.7
-layout: post
+key: linux_install_python3.7
+layout: article
 date: '2019-05-24 20:00:00'
-categories: 技术 python3 python3.7 python ubuntu linux
+tags: 技术 python linux
 ---
 
 ### ubuntu18.04安装python3.7.3
@@ -36,4 +37,4 @@ Python 3.7.3
 ```bash
 wget https://bootstrap.pypa.io/get-pip.py
 sudo python3.7 get-pip.py
- ```
+```

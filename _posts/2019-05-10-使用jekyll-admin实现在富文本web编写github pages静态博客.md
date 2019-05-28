@@ -1,8 +1,9 @@
 ---
 title: 使用jekyll-admin实现在富文本web编写github pages静态博客
-layout: post
+key: use_jeyll_admin
+layout: article
 date: '2019-05-10 16:15:33'
-categories: 技术  jekyll  博客
+tags: 技术  博客
 typora-root-url: ../../iblog
 ---
 

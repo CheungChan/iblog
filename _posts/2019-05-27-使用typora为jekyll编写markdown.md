@@ -1,8 +1,9 @@
 ---
 title: 使用typora为jekyll编写markdown
-layout: post
+key: typora_write_jekyll
+layout: article
 date: '2019-05-27 19:30:00'
-categories: 技术 jekyll 博客  typora
+tags: 技术 博客  工具
 typora-root-url: ../../iblog
 
 ---
