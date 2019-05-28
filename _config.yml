@@ -70,10 +70,16 @@ chart: true
 
 comments:
   provider: valine
+  region: cn
+  lang: zh-cn
   valine:
     app_id  : "4U8opX196aOmdRP9NXHz71u5-gzGzoHsz"
     app_key : "CTmWeRSov5qVG95hVN98RNiT"
-    
+  placeholder: "快来留下你的评论吧^_^"
+  notify: true
+  visitor: true
+  avatar: "monsterid"
+
 pageview:
   provider: leancloud
   leancloud:
@@ -84,7 +90,7 @@ analytics:
   provider: google
   google:
     tracking_id: "UA-140963197-1"
-    anonymize_ip: true
+    anonymize_ip: false
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
