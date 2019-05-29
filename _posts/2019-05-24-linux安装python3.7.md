@@ -4,6 +4,7 @@ key: linux_install_python3.7
 layout: article
 date: '2019-05-24 20:00:00'
 tags: 技术 python linux
+typora-root-url: ../../iblog
 ---
 
 ## ubuntu
@@ -54,7 +55,7 @@ sudo python3.7 get-pip.py
 
    就可以看到具体的centos版本
 
-   ![image-20190529175359294](../img/image-20190529175359294.png)
+   ![image-20190529175359294](/img/image-20190529175359294.png)
 
 1. 安装依赖
 
