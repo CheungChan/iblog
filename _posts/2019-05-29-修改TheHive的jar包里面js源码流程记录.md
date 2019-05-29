@@ -1,5 +1,5 @@
 ---
-title: 修改TheHive的jar包里面js源码流程记录
+python3.8新增的functools.cached_property特点是加了线程锁，但不支持异步操作。title: 修改TheHive的jar包里面js源码流程记录
 key: modify_thehive_jar_js
 layout: article
 date: '2019-05-29 14:57:00'
