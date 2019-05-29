@@ -6,7 +6,10 @@ date: '2019-05-24 20:00:00'
 tags: 技术 python linux
 ---
 
-### ubuntu18.04安装python3.7.3
+## ubuntu
+
+### ubuntu18.04使用apt安装python3.7.3
+
 1. 首先更新软件包列表并安装先决条件：
 ```bash
 sudo apt update
@@ -38,3 +41,56 @@ Python 3.7.3
 wget https://bootstrap.pypa.io/get-pip.py
 sudo python3.7 get-pip.py
 ```
+
+## centos
+
+### centos7使用源码安装python3.7.3
+
+0. 怎样确定centos系统是不是7呢?
+
+   ```bash
+   cat /etc/redhat-release 
+   ```
+
+   就可以看到具体的centos版本
+
+   ![image-20190529175359294](../img/image-20190529175359294.png)
+
+1. 安装依赖
+
+   ```bash
+   yum install gcc openssl-devel bzip2-devel libffi-devel
+   ```
+
+2. 下载python3.7.3并解压
+
+   ```bash
+   wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz
+   tar xzf Python-3.7.3.tgz
+   ```
+
+3. 安装python3.7.3
+
+   ```bash
+   cd Python-3.7.3
+   ./configure --enable-optimizations --prefix=/usr/local/python3 
+   make altinstall
+   ```
+
+4. 创建软连接
+
+   ```bash
+    ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3
+    ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3.7
+    ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3
+    ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3.7
+   ```
+
+5. 检查python版本
+
+   ````bash
+   python3.7 -V
+   Python 3.7.3
+   ````
+
+   
