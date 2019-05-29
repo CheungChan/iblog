@@ -11,7 +11,7 @@ typora-root-url: ../../iblog
 
 需求是要在TheHive的Case页面下的observables下添加按钮批量录入IOC.  需要更改TheHive的源码. 修改一些页面js. 但是js是在jar包当中的.
 
-### 操作流程记录如下:
+### 操作流程:
 
 1. 进入jar包所在目录
 
