@@ -107,7 +107,7 @@ sudo python3.7 get-pip.py
    sudo rm /usr/bin/python3
    sudo rm /usr/bin/python3.7
    sudo rm /usr/bin/pip3
-   sudo rm  /usr/bin/pip3.7
+   sudo rm /usr/bin/pip3.7
    
    sudo ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3
    sudo ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3.7
