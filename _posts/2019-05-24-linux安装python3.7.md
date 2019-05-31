@@ -104,10 +104,10 @@ sudo python3.7 get-pip.py
 4. 创建软连接
 
    ```bash
-    ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3
-    ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3.7
-    ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3
-    ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3.7
+   sudo ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3
+   sudo ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3.7
+   sudo ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3
+   sudo ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3.7
    ```
 
 5. 检查python版本
