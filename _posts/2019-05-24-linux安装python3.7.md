@@ -97,8 +97,10 @@ sudo python3.7 get-pip.py
 
    ```bash
    cd Python-3.7.3
-   sudo ./configure --enable-optimizations --prefix=/usr/local/python3 --with-ssl
+   sudo make clean
+   sudo ./configure --enable-optimizations --with-ssl --prefix=/usr/local/python3 
    sudo make altinstall
+   # 如果报错 subprocess.CalledProcessError: Command '('lsb_release', '-a')' returned non-zero exit status 1.  需要执行 sudo mv /usr/bin/lsb_release /usr/bin/lsb_release_back
    ```
 
 4. 创建软连接
