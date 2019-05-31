@@ -7,7 +7,7 @@ tags: 技术 python linux
 typora-root-url: ../../iblog
 ---
 
-## ubuntu
+## 软件包管理器安装
 
 ### ubuntu18.04使用apt安装python3.7.3
 
@@ -43,9 +43,9 @@ wget https://bootstrap.pypa.io/get-pip.py
 sudo python3.7 get-pip.py
 ```
 
-## centos
+## 编译安装
 
-### centos7使用源码安装python3.7.3
+
 
 0. 怎样确定centos系统是不是7呢?
 
@@ -57,11 +57,32 @@ sudo python3.7 get-pip.py
 
    ![image-20190529175359294](/img/image-20190529175359294.png)
 
+   怎样确定ubuntu系统的版本呢?
+
+```bash
+cat /etc/lsb-release
+```
+
+​	就可以看到具体的ubutnu系统版本
+
+​    ![image-20190531165450552](/img/image-20190531165450552.png)
+
 1. 安装依赖
+
+   centos:
 
    ```bash
    yum install gcc openssl-devel bzip2-devel libffi-devel
    ```
+
+   ubuntu:
+
+   ```bash
+   sudo apt-get install build-essential checkinstall
+   sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+   ```
+
+   
 
 2. 下载python3.7.3并解压
 
