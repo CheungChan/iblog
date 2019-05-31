@@ -57,7 +57,11 @@ sudo python3.7 get-pip.py
 
     ![image-20190529175359294](/img/image-20190529175359294.png)
 
-       怎样确定ubuntu系统的版本呢?
+       
+
+    怎样确定ubuntu系统的版本呢?
+
+    
 
     ```bash
     cat /etc/lsb-release
