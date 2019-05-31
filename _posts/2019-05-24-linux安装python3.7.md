@@ -49,23 +49,21 @@ sudo python3.7 get-pip.py
 
 0. 怎样确定centos系统是不是7呢?
 
-   ```bash
-   cat /etc/redhat-release 
-   ```
+    ```bash
+    cat /etc/redhat-release 
+    ```
 
-   就可以看到具体的centos版本
+    就可以看到具体的centos版本
 
-   ![image-20190529175359294](/img/image-20190529175359294.png)
+    ![image-20190529175359294](/img/image-20190529175359294.png)
 
-   怎样确定ubuntu系统的版本呢?
+       怎样确定ubuntu系统的版本呢?
 
-```bash
-cat /etc/lsb-release
-```
+    ```bash
+    cat /etc/lsb-release
+    ```
 
-​	就可以看到具体的ubutnu系统版本
-
-​    ![image-20190531165450552](/img/image-20190531165450552.png)
+    ​	就可以看到具体的ubutnu系统版本    ![image-20190531165450552](/img/image-20190531165450552.png)
 
 1. 安装依赖
 
