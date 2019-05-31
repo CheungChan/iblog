@@ -98,7 +98,7 @@ sudo python3.7 get-pip.py
    ```bash
    cd Python-3.7.3
    ./configure --enable-optimizations --prefix=/usr/local/python3 
-   make altinstall
+   sudo make altinstall
    ```
 
 4. 创建软连接
