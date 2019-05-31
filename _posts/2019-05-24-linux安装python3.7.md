@@ -97,7 +97,7 @@ sudo python3.7 get-pip.py
 
    ```bash
    cd Python-3.7.3
-   ./configure --enable-optimizations --prefix=/usr/local/python3 --with-ssl
+   sudo ./configure --enable-optimizations --prefix=/usr/local/python3 --with-ssl
    sudo make altinstall
    ```
 
