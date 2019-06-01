@@ -26,7 +26,7 @@ typora-root-url: ../../iblog
 
 1. 菜单进入编辑->图片工具->当插入本地图片时->复制图片到文件夹->然后选择img文件夹
 
-![image-20190527194841697](/img/image-20190527194841697.png)
+![](http://psf4tlwcj.bkt.clouddn.com/img/image-20190527194841697.png)
 
 2. 菜单选择 编辑->图片工具->设置图片根目录-> 选择项目文件夹
 3. 这样拖动图片进入typora, 或者截图粘贴的时候, 图片路径会是`/img/xxx.png`跟jekyll要求的是一样的.
