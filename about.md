@@ -18,8 +18,7 @@ titles:
 key: page-about
 ---
 
-Just say something about yourself. :+1:
+我是阿章, 一名`python`开发者. 在这里记录**技术 做饭 生活 感想**. 
 
-{% highlight javascript %}
-(() => console.log('hello, world!'))();
-{% endhighlight %}
+**做更好的自己** 
+
