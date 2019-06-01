@@ -74,7 +74,7 @@ comments:
     app_id  : "4U8opX196aOmdRP9NXHz71u5-gzGzoHsz"
     app_key : "CTmWeRSov5qVG95hVN98RNiT"
   placeholder: "快来留下你的评论吧^_^"
-  lang: zh-cn
+  lang: "zh-cn"
   notify: true
   visitor: true
   avatar: "monsterid"
