@@ -103,22 +103,28 @@ sudo python3.7 get-pip.py
    # 如果报错 subprocess.CalledProcessError: Command '('lsb_release', '-a')' returned non-zero exit status 1.  需要执行 sudo mv /usr/bin/lsb_release /usr/bin/lsb_release_back
    ```
 
-4. 创建软连接
+4. 创建软连接(注意千万不要修改python3 pip3的指向, 否则会报各种奇怪问题, 超级恶心. 如果出现了把python3指向原来的版本才可以解决)
 
    ```bash
    sudo rm /usr/bin/python3.7
    sudo rm /usr/bin/pip3.7
-   
-   
    sudo ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3.7
    sudo ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3.7
    ```
    
-5. 检查python版本
+5. 检查ssl是否安装成功(如果报错, 就很恶心了)
 
-   ````bash
-   python3.7 -V
-   Python 3.7.3
+   ````python
+   import ssl
    ````
-
    
+### docker安装
+   
+   这种安装方式最简单. 我自己打包了一个基于debain的python3.7.3的镜像可以直接使用一条命令运行
+   
+   ```bash
+   docker run --name python_c -itd cheungchan/python bash
+   ```
+   
+   安装docker参考我的博客  [docker安装](/2019/06/04/docker安装.html)
+
