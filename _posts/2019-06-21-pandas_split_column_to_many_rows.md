@@ -1,5 +1,5 @@
 ---
-title: Pandas: Splitting (Exploding) a column into multiple rows
+title: 使用pandas将一列用分隔符隔开的数据变成多行
 key: pandas_split_column_to_many_rows
 layout: article
 date: '2019-06-21 11:20:00'
@@ -12,7 +12,17 @@ typora-root-url: ../../iblog
 
 有一个csv, 是ip和对应的单位名称, ip这一列数据有的是用逗号隔开的, 现在需要将这一的数据拆分成多行, 来应对与其他csv的join操作
 
+原图:
+
 ![](http://psf4tlwcj.bkt.clouddn.com/img/20190621114220.png)
+
+
+
+最终结果:
+
+
+
+
 
 ### 解决方案
 
@@ -53,5 +63,14 @@ reset_index把两个level的index都变成column
 new_df = new_df.reset_index()[["单位",0]]
 
 new_df.columns=["失陷单位","失陷IP"]
+"""
+最终输出结果
+    失陷单位     失陷IP
+0  北京xxx  1.1.1.1
+1  湖南xxx  2.2.2.2
+2  湖南xxx  3.3.3.3
+3  广州xxx  4.4.4.4
+"""
+new_df.to_csv("测试结果.csv",index=False)
 ```
 
