@@ -55,7 +55,7 @@ sudo python3.7 get-pip.py
 
     就可以看到具体的centos版本
 
-    ![](http://psf4tlwcj.bkt.clouddn.com/img/image-20190529175359294.png)
+    ![](http://img.azhangbaobao.cn/img/image-20190529175359294.png)
 
        
 
@@ -67,7 +67,7 @@ sudo python3.7 get-pip.py
     cat /etc/lsb-release
     ```
 
-    ​	就可以看到具体的ubutnu系统版本    ![](http://psf4tlwcj.bkt.clouddn.com/img/image-20190531165450552.png)
+    ​	就可以看到具体的ubutnu系统版本    ![](http://img.azhangbaobao.cn/img/image-20190531165450552.png)
 
 1. 安装依赖
 
@@ -119,12 +119,12 @@ sudo python3.7 get-pip.py
    ````
    
 ### docker安装
-   
+
    这种安装方式最简单. 我自己打包了一个基于debain的python3.7.3的镜像可以直接使用一条命令运行
-   
+
    ```bash
    docker run --name python_c -itd cheungchan/python bash
    ```
-   
+
    安装docker参考我的博客  [docker安装](/2019/06/04/docker安装.html)
 

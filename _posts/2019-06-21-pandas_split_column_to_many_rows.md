@@ -14,7 +14,7 @@ typora-root-url: ../../iblog
 
 原图:
 
-![](http://psf4tlwcj.bkt.clouddn.com/img/20190621114220.png)
+![](http://img.azhangbaobao.cn/img/20190621114220.png)
 
 
 
@@ -22,7 +22,7 @@ typora-root-url: ../../iblog
 
 
 
-![](http://psf4tlwcj.bkt.clouddn.com/img/20190621131900.png)
+![](http://img.azhangbaobao.cn/img/20190621131900.png)
 
 
 
