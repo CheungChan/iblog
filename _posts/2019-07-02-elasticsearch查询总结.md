@@ -49,17 +49,16 @@ GET /domain_ip_log_*/_search
 
 根据指定字段精确查询,但是字段是邮箱(含有特殊字符),而字段未按照`string not analyzed`进行索引, 可以进行短语查询
 
+
+
 ```bash
 GET /domain_ip_log_*/_search
 {
   "query": {
     "bool": {
       "filter": {
-        "match": {
-          "User": {
-            "query": "makai@threatbook.cn",
-            "type": "phrase"
-          }
+        "match_phrase": {
+          "User": "makai@threatbook.cn"
         }
       }
     }
@@ -67,7 +66,20 @@ GET /domain_ip_log_*/_search
 }
 ```
 
+注意之前
 
+```bash
+{
+     "match": {
+     "User": {
+          "query": "makai@threatbook.cn",
+          "type": "phrase"
+         }
+      }
+ }
+```
+
+这种写法有的时候会遇到问题, 报错`[match] query does not support [type]`, 所以尽量用`match_phrase`这种写法又简洁,又不会报错
 
 #### 同时根据时间范围和短语查询
 
@@ -106,7 +118,7 @@ GET /domain_ip_log_*/_search
 #### 同时根据时间范围和字段精确查询
 
 ```bash
-GET cube-*/_search
+GET /domain_ip_log_*/_search
 {
   "query": {
     "bool": {
@@ -116,14 +128,14 @@ GET cube-*/_search
             {
               "range": {
                 "@timestamp": {
-                  "gte": "2018-07-02T03:30:01.000Z",
+                  "gte": "2019-07-02T03:30:01.000Z",
                   "lte": "2019-07-02T03:30:01.000Z"
                 }
               }
             },
             {
-              "term": {
-                "type":"sdownload"
+              "match_phrase": {
+                "User": "makai@threatbook.cn"
               }
             }
           ]
