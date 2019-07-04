@@ -48,8 +48,8 @@ typora-root-url: ../../iblog
 7. 重启TheHive
 
    ```bash
-    service thehive stop
-    service thehive start
+    sudo service thehive stop
+    sudo service thehive start
    ```
 
  这样才算正式生效.
