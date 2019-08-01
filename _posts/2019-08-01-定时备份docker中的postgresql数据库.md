@@ -19,7 +19,7 @@ pg_bak.sh ( 注意命令路径必须使用绝对路径)
 ```shell
 #!/bin/sh
 file="bak_$(date +"%Y%m%d_%H%M%S").sql"
-/usr/bin/docker exec -t postgresql  pg_dump -U threatbook -d threatbook > "/data/pg_bak/${file}"
+/usr/bin/docker exec -t postgresql  pg_dump -U username -d dbname > "/data/pg_bak/${file}"
 ```
 
 赋予脚本执行权限
