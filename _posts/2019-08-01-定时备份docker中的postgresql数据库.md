@@ -30,7 +30,7 @@ chmod +x pg_bak.sh
 
 crontab -e
 
-```cron
+```bash
 # 用每分钟一次来调试
 * * * * * . ~/.bash_profile; /data/pg_bak/pg_bak.sh
 # 实际用每天11点钟
@@ -47,7 +47,7 @@ crontab -e
 
 2. 用crontab执行shell脚本.shell脚本里面的命令必须用绝对路径`/usr/bin/docker`
 
-3. 调试crontab日志 , 用mail
+3. 调试crontab日志 , 用`mail` 或者`tail -f /var/log/cron`
 
 4. crontab -e配置文件里要使用环境变量的方式是`* * * * * . ~/.zshrc;  /xxx/yy.sh` 
 
