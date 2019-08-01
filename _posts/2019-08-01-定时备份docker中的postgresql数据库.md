@@ -54,3 +54,27 @@ crontab -e
 5. 写完shell脚本之后一定要给shell脚本执行权限
 
 6. 调试的时候cron可以用 * * * * *, 之后改, 分别代表意思是分 时 日 月 周
+
+### 如何恢复数据
+
+如果恢复到正式数据库
+
+```bash
+cat bak_20190801_151806.sql| docker exec -i postgresql  psql -U username
+```
+
+如果恢复到其他数据库
+
+1. 创建数据库
+
+   ```bash
+   create database dbname_prod_bak_20190722  owner username;
+   grant all privileges on database dbname_prod_bak_20190722 to username;
+   ```
+
+2. 恢复数据
+
+```bash
+cat bak_20190801_151806.sql| docker exec -i postgresql  psql -U username -d dbname_prod_bak_20190722
+```
+
