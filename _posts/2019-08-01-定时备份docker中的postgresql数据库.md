@@ -37,7 +37,7 @@ crontab -e
 0 11 * * *  . ~/.bash_profile; /data/pg_bak/pg_bak.sh
 ```
 
-### 知识点整理:
+### 知识点整理
 
 1.  用当前时间来命名文件
 
