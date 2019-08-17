@@ -3,7 +3,7 @@ title: postgresql使用docker搭建与备份
 key: postgresql_init_and_bak
 layout: article
 date: '2019-08-17 17:51:00'
-tags: 技术 数据库 linux
+tags: 技术 数据库 docker
 typora-root-url: ../../iblog
 ---
 
