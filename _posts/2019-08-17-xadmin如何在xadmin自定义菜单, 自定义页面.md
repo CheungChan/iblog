@@ -72,20 +72,22 @@ class TestView(CommAdminView):
 
 **thehive/test.html**
 
-{% raw %}
+
 
 ```django
-{% extends 'xadmin/base_site.html' %}
+
+{{ "{%" }} extends 'xadmin/base_site.html' %}
 {# 例 展示本地文件内容#}
-{% block nav_form %}
-    <h3>{{ title }}</h3>
-    {% for i in context1 %}
-        <p>{{ i }}</p>
-    {% endfor %}
-{% endblock %}
+{{ "{%" }} block nav_form %}
+    <h3>{{ "{{" }} title }}</h3>
+    {{ "{%" }} for i in context1 %}
+        <p>{{ "{{" }} i }}</p>
+    {{ "{%" }} endfor %}
+{{ "{%" }} endblock %}
+
 ```
 
-{% endraw %}
+
 
 **xadmin.py:**
 
