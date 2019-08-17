@@ -218,6 +218,8 @@ $(document).ready(function(){
 
 [**highlight-within-textarea__jquery.highlight-within-textarea.js**](https://gist.github.com/CheungChan/f79b2a158e8337c71523ab0268d2d38b#file-highlight-within-textarea__jquery-highlight-within-textarea-js)
 
+{% raw %}
+
 ```js
 /*
  * highlight-within-textarea
@@ -601,3 +603,4 @@ $(document).ready(function(){
 })(jQuery);
 ```
 
+{% endraw %}
