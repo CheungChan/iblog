@@ -33,7 +33,7 @@ plugins:
 
 theme: jekyll-text-theme
 text_skin: forest
-highlight_theme: tomorrow-night-bright
+highlight_theme: tomorrow-night-eighties #tomorrow-night-bright
 lang: zh-CN
 timezone: Asia/Shanghai
 repository: cheungchan/iblog
