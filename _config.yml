@@ -32,7 +32,8 @@ plugins:
   - jemoji
 
 theme: jekyll-text-theme
-text_skin: ocean
+text_skin: orange
+highlight_theme: tomorrow-night-bright
 lang: zh-CN
 timezone: Asia/Shanghai
 repository: cheungchan/iblog
