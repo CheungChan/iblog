@@ -18,7 +18,7 @@ docker pull postgres
 #### 启动容器
 
 ```bash
-docker run --name postgresql -e POSTGRES_PASSWORD=mypassword -e POSTGRES_USER=myuser -p 5432:5432 -v /data/db_pg:/home/data -d postgres
+docker run --name postgresql -e POSTGRES_PASSWORD=mypassword -e POSTGRES_USER=myuser -p 5432:5432 -v /data/db_pg:/var/lib/postgresql/data -d postgres
 ```
 
 #### 查看容器
