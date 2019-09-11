@@ -104,7 +104,7 @@ class JobInfo(models.Model):
     trigger_kwargs = JSONField(verbose_name='触发器及其他参数')
     next_run_time = models.DateTimeField(verbose_name='下次运行时间', null=True)
     func = models.CharField(max_length=100, verbose_name='执行函数', help_text=func_help_text)
-    func_args = ArrayField(models.CharField(max_length=200), verbose_name='函数参数', help_text='不同参数用,隔开')
+   func_args = JSONField(verbose_name='函数执行参数, 传递一个数组')
     create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     update_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)
 
@@ -120,6 +120,10 @@ class JobInfo(models.Model):
         return mark_safe(f"<pre>{json.dumps(self.trigger_kwargs)}</pre>")
 
     get_trigger_kwargs.short_description = '触发器及其他参数'
+    def get_func_args(self):
+        return mark_safe(f"<pre>{json.dumps(self.func_args, ensure_ascii=False)}</pre>")
+
+    get_func_args.short_description = '函数执行参数'
 ```
 
 这里有一个坑点, 是如果直接使用models.UUIDField, 貌似最简便, 但是在做filter的时候`JobInfo.objects.filter(job_id=job.id`的时候发现怎么查出来都是空集, 原来uuid类型和字符串类型无法相等, 而且如果用还要做数据库类型(uuid)和python类型(str)之间的类型转换什么的,比较麻烦, 最简单的办法是直接使用`CharField`.
@@ -146,7 +150,7 @@ class JobInfo(models.Model):
     trigger_kwargs = JSONField(verbose_name='触发器及其他参数')
     next_run_time = models.DateTimeField(verbose_name='下次运行时间', null=True)
     func = models.CharField(max_length=100, verbose_name='执行函数', help_text=func_help_text)
-    func_args = ArrayField(models.CharField(max_length=200), verbose_name='函数参数', help_text='不同参数用,隔开')
+   func_args = JSONField(verbose_name='函数执行参数, 传递一个数组')
     create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     update_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)
 
@@ -162,7 +166,10 @@ class JobInfo(models.Model):
         return mark_safe(f"<pre>{json.dumps(self.trigger_kwargs)}</pre>")
 
     get_trigger_kwargs.short_description = '触发器及其他参数'
+		def get_func_args(self):
+        return mark_safe(f"<pre>{json.dumps(self.func_args, ensure_ascii=False)}</pre>")
 
+    get_func_args.short_description = '函数执行参数'
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         from threatbook_xadmin.wsgi import scheduler
@@ -219,7 +226,7 @@ from .models import JobInfo
 
 
 class JobInfoAdmin:
-    list_display = ["job_id", "get_trigger_kwargs", "next_run_time", "func", "func_args", 'create_time',
+    list_display = ["job_id", "get_trigger_kwargs", "next_run_time", "func", "get_func_args", 'create_time',
                     'update_time']
     exclude = ["next_run_time", "create_time", 'update_time']
 
@@ -282,8 +289,35 @@ class JobInfoManager(models.Manager):
 
 这样, 实现了通过操作`JobInfo`这张表就可以操作定时任务. 可以通过xadmin来进行便捷的管理. 
 
+所有任务都放在了**scheduler_jobs.tasks**下
+
+```python
+# -*- coding: utf-8 -*-
+__author__ = '陈章'
+__date__ = '2019/9/10 18:19'
+from emails.models import Email
+
+
+def test(*args):
+    print(args)
+
+
+def send_emails(sender, receivers, subject, content, attachments_path_list):
+    print('发送邮件中')
+    e = Email(sender=sender, receivers=receivers, subject=subject, content=content,
+              attachments_path_list=attachments_path_list)
+    e.save()
+    print('发送成功')
+
+```
+
+
+
 效果图
 
-![](http://img.azhangbaobao.cn/img/20190911165713.png)
+![](http://img.azhangbaobao.cn/img/20190911175205.png)
 
 ![](http://img.azhangbaobao.cn/img/20190911170023.png)
+
+![](http://img.azhangbaobao.cn/img/20190911175516.png)
+
