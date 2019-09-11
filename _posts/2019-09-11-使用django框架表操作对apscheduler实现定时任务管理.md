@@ -126,7 +126,7 @@ class JobInfo(models.Model):
     get_func_args.short_description = '函数执行参数'
 ```
 
-这里有一个坑点, 是如果直接使用models.UUIDField, 貌似最简便, 但是在做filter的时候`JobInfo.objects.filter(job_id=job.id`的时候发现怎么查出来都是空集, 原来uuid类型和字符串类型无法相等, 而且如果用还要做数据库类型(uuid)和python类型(str)之间的类型转换什么的,比较麻烦, 最简单的办法是直接使用`CharField`.
+这里有一个坑点, 是如果job_id字段直接使用models.UUIDField, 貌似最简便, 但是在做filter的时候`JobInfo.objects.filter(job_id=job.id`的时候发现怎么查出来都是空集, 原来uuid类型和字符串类型无法相等, 而且如果用还要做数据库类型(uuid)和python类型(str)之间的类型转换什么的,比较麻烦, 最简单的办法是直接使用`CharField`.
 
 #### 第三个问题
 
