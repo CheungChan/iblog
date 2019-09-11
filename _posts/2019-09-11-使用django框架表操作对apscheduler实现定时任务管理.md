@@ -285,3 +285,5 @@ class JobInfoManager(models.Manager):
 效果图
 
 ![](http://img.azhangbaobao.cn/img/20190911165713.png)
+
+![](http://img.azhangbaobao.cn/img/20190911170023.png)
