@@ -193,6 +193,8 @@ class JobInfo(models.Model):
                 # next_run_time更新
                 super(JobInfo, self).save()
             else:
+                # 修改不用删除再添加,直接添加就行, id一样,并且replace_existing=True就会覆盖掉
+
                 # try:
                 #     scheduler.remove_job(self.job_id)
                 # except JobLookupError as e:
