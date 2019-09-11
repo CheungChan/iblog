@@ -104,7 +104,7 @@ class JobInfo(models.Model):
     trigger_kwargs = JSONField(verbose_name='触发器及其他参数')
     next_run_time = models.DateTimeField(verbose_name='下次运行时间', null=True)
     func = models.CharField(max_length=100, verbose_name='执行函数', help_text=func_help_text)
-   func_args = JSONField(verbose_name='函数执行参数, 传递一个数组')
+    func_args = JSONField(verbose_name='函数执行参数, 传递一个数组')
     create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     update_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)
 
