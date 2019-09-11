@@ -193,7 +193,10 @@ class JobInfo(models.Model):
                 # next_run_time更新
                 super(JobInfo, self).save()
             else:
-                scheduler.remove_job(self.job_id)
+                # try:
+                #     scheduler.remove_job(self.job_id)
+                # except JobLookupError as e:
+                #     logger.warning(f'{self.job_id} 任务未找到')
                 try:
                     job = scheduler.add_job(self.func, args=self.func_args, id=self.job_id,
                                             **self.trigger_kwargs,
