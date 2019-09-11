@@ -1,5 +1,5 @@
 ---
-title: 通过django框架表CRUD自动对apscheduler管理实现定时动态定时任务
+title: 通过django框架表CRUD自动对apscheduler管理实现动态定时任务
 key: django_apscheduler
 layout: article
 date: '2019-09-11 16:45:00'
