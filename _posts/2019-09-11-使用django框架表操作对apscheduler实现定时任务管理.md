@@ -98,7 +98,7 @@ class JobInfo(models.Model):
     格式:
     模块路径:方法名
     示例:
-    threatbook_scheduler.tasks:test
+    scheduler_jobs.tasks:test
     """
     job_id = models.CharField(max_length=100, verbose_name='任务id', default=uuid.uuid4)
     trigger_kwargs = JSONField(verbose_name='触发器及其他参数')
