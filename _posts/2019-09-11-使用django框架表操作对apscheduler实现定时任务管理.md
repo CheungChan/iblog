@@ -219,7 +219,7 @@ class JobInfo(models.Model):
 
 这里, 如果记录不存在,则是新增, 直接添加任务, 添加完取得`next_run_time`信息, 并更新表( 没有用信号的好处,这里可以用super的save直接保存, 如果用了信号, 又会进入信号函数). 
 
-记录存在的话, 修改. 修改的时候, 如果定时信息没有变化,直接调用super的save, 也就是只更改了`next_run_time`. 如果有变化,先删除,再添加
+记录存在的话, 修改. 修改的时候, 如果定时信息没有变化,直接调用super的save, 也就是只更改了`next_run_time`. 如果有变化,~~先删除,再添加~~ 直接添加, 并把replace_existing设置为True
 
 这里又有一个坑点, 我是通过xadmin操作表来debug的. 修改没有问题, 删除的时候, 不进入delete方法. 最终查资料发现, delete是一个action. action里面调用的是`filter_hook`方法`def delete_models(self, queryset): 所以可以在`OptionClass里实现这个方法, 用这个方法遍历再调用models实例的delete方法
 
