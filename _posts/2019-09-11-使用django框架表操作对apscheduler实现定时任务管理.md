@@ -60,7 +60,6 @@ else:
 **wsgi.py**
 
 ```python
-
 import os
 
 from django.core.wsgi import get_wsgi_application
@@ -70,17 +69,21 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'threatbook_xadmin.settings')
 application = get_wsgi_application()
 # 初始化定时任务, 放在wsgi里, 被gunicorn 的 master 执行完, worker进程再fork, 这样不会fork多份
 import pytz
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.background import BackgroundScheduler
 
+import logging
+
+logger = logging.getLogger("threatbook_xadmin")
+# 原来使用SqlalchemyJobStore来配置不生效. 后来发现是配置有问题, 最后使用字符串进行的配置. 
+# apscheduler有对应的entry point, 会根据字符串找到对应的类来处理
 jobstores = {
-    'sqlite': SQLAlchemyJobStore(url="postgresql://threatbook:threatbook@localhost:5432/threatbook")
+    'default': {'type': 'sqlalchemy', 'url': "postgresql://threatbook:threatbook@localhost:5432/threatbook"}
 }
 timez = pytz.timezone('Asia/Shanghai')
-scheduler = BackgroundScheduler(jobstores=jobstores, timezone=timez)
+scheduler = BackgroundScheduler(jobstores=jobstores, timezone=timez, logger=logger)
 scheduler.start()
 
-print('scheduler被master进程开启')
+logger.info('scheduler被master进程开启')
 ```
 
 #### 第二个问题
@@ -247,34 +250,25 @@ xadmin.site.register(JobInfo, JobInfoAdmin)
 
 #### 第四个问题
 
-虽然`apscheduler`使用的是`SQLAlchemyJobStore`, 但是项目重启的时候, 好像不起作用, 表里面没有定时任务数据, 所以应该在一开始, 将models里的定时任务加载到apscheduler, 然后每次查询的时候查询任务状态, 更新`next_run_time`字段信息. 这里每次查询的时候触发, 是表级别的操作, 可以通过自定义manager来解决
+每次查询的时候查询任务状态, 需要调用`scheduler.get_jobs`来更新`next_run_time`字段信息. 这里每次查询的时候触发, 是表级别的操作, 可以通过自定义manager来解决
 
 **models.py**
 
 ```python
-
-global_has_init_apscheduler = False
+import json
 import logging
+import uuid
+
+from django.contrib.postgres.fields import JSONField
+from django.db import models
+from django.utils.safestring import mark_safe
 
 logger = logging.getLogger("threatbook_xadmin")
 
 
 class JobInfoManager(models.Manager):
     def get_queryset(self):
-        # 只在第一次的时候将JobInfo表中的任务全部初始化到apscheduler 里面
-        global global_has_init_apscheduler
         from threatbook_xadmin.wsgi import scheduler
-
-        if not global_has_init_apscheduler:
-            scheduler.remove_all_jobs()
-            for job in JobInfo.default_objects.all():
-                try:
-                    scheduler.add_job(job.func, args=job.func_args, id=job.job_id, **job.trigger_kwargs)
-                except LookupError as e:
-                    logger.exception(e)
-                    raise LookupError(f"定时任务初始化失败, 不能导入 {job.func}")
-            print('apscheduler 初始化完成')
-            global_has_init_apscheduler = True
 
         # 更新job状态到JobInfo表
         jobs = scheduler.get_jobs()
@@ -320,9 +314,9 @@ def send_emails(sender, receivers, subject, content, attachments_path_list):
 
 效果图
 
-![](http://img.azhangbaobao.cn/img/20190911175205.png)
+![](http://img.azhangbaobao.cn/img/20190912111803.png)
 
-![](http://img.azhangbaobao.cn/img/20190911170023.png)
+![](http://img.azhangbaobao.cn/img/20190912111540.png)
 
-![](http://img.azhangbaobao.cn/img/20190911175516.png)
+![](http://img.azhangbaobao.cn/img/20190912111739.png)
 
