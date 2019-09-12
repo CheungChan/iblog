@@ -295,26 +295,41 @@ class JobInfoManager(models.Manager):
 __author__ = '陈章'
 __date__ = '2019/9/10 18:19'
 from emails.models import Email
+import logging
+
+logger = logging.getLogger("threatbook_xadmin")
 
 
 def test(*args):
-    print(args)
+    logger.info(args)
 
 
-def send_emails(sender, receivers, subject, content, attachments_path_list):
-    print('发送邮件中')
-    e = Email(sender=sender, receivers=receivers, subject=subject, content=content,
+def send_emails(receivers, subject, content, attachments_path_list):
+    """
+    参数示例:
+    [["chenzhang@threatbook.cn"],
+    "测试标题",
+    "<h1>测试内容</h1>",
+    ["/Users/chenzhang/PycharmProjects/threatbook_xadmin/apps/scheduler_jobs/tasks.py"]
+    ]
+    :param receivers:
+    :param subject:
+    :param content:
+    :param attachments_path_list:
+    :return:
+    """
+    logger.info('发送邮件中')
+    e = Email(receivers=receivers, subject=subject, content=content,
               attachments_path_list=attachments_path_list)
     e.save()
-    print('发送成功')
-
+    logger.info('发送成功')
 ```
 
 
 
 效果图
 
-![](http://img.azhangbaobao.cn/img/20190912111803.png)
+![](http://img.azhangbaobao.cn/img/20190912112919.png)
 
 ![](http://img.azhangbaobao.cn/img/20190912111540.png)
 
