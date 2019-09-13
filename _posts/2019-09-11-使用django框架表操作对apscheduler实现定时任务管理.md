@@ -55,7 +55,7 @@ else:
 
 ```
 
-这个问题, 最终的解决方案是, 把初始化apscheduler对象的任务要放在master进程中, 这样prefork的时候, 就不会被初始化多次, 怎么放在master进程中呢? 可以通过把代码写在`wsgi.py`中, 来实现
+这个问题, 最终的解决方案是, 把初始化apscheduler对象的任务要放在master进程中, 这样prefork的时候, 就不会被初始化多次, 怎么放在master进程中呢? 可以通过把代码写在`wsgi.py`中, 来实现, 并且gunicorn的启动参数添加`--preload`.
 
 **wsgi.py**
 
@@ -85,6 +85,14 @@ scheduler.start()
 
 logger.info('scheduler被master进程开启')
 ```
+
+gunicorn启动
+
+```bash
+gunicorn -c gunicorn.conf "$app_name".wsgi --preload -D
+```
+
+
 
 #### 第二个问题
 
