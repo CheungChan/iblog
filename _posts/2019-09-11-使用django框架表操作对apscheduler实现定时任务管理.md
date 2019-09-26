@@ -60,6 +60,15 @@ else:
 **wsgi.py**
 
 ```python
+"""
+WSGI config for threatbook_xadmin project.
+
+It exposes the WSGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
+"""
+
 import os
 
 from django.core.wsgi import get_wsgi_application
@@ -70,26 +79,33 @@ application = get_wsgi_application()
 # 初始化定时任务, 放在wsgi里, 被gunicorn 的 master 执行完, worker进程再fork, 这样不会fork多份
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
-
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 import logging
 
 logger = logging.getLogger("threatbook_xadmin")
-# 原来使用SqlalchemyJobStore来配置不生效. 后来发现是配置有问题, 最后使用字符串进行的配置. 
+logger.info("正在重启")
+# 原来使用SqlalchemyJobStore来配置不生效. 后来发现是配置有问题, 最后使用字符串进行的配置.
 # apscheduler有对应的entry point, 会根据字符串找到对应的类来处理
 jobstores = {
-    'default': {'type': 'sqlalchemy', 'url': "postgresql://threatbook:threatbook@localhost:5432/threatbook"}
+    'sqlite': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
 }
 timez = pytz.timezone('Asia/Shanghai')
 scheduler = BackgroundScheduler(jobstores=jobstores, timezone=timez, logger=logger)
 scheduler.start()
 
-logger.info('scheduler被master进程开启')
+# 重新设置定时任务
+from scheduler_jobs.models import JobInfo
+
+for m in JobInfo.objects.all():
+    m.save()
+logger.info("重启完成")
+
 ```
 
 gunicorn启动
 
 ```bash
-gunicorn -c gunicorn.conf "$app_name".wsgi --preload -D
+gunicorn -c gunicorn_config.py "$app_name".wsgi --preload -D
 ```
 
 
@@ -148,6 +164,41 @@ class JobInfo(models.Model):
 **models.py**
 
 ```python
+# -*- coding: utf-8 -*-
+__author__ = '陈章'
+__date__ = '2019/9/10 17:17'
+import json
+import logging
+import uuid
+
+from django.contrib.postgres.fields import JSONField
+from django.db import models
+from django.utils.safestring import mark_safe
+from apscheduler.schedulers.base import JobLookupError
+from datetime import datetime, timedelta
+
+logger = logging.getLogger("threatbook_xadmin")
+
+
+class JobInfoManager(models.Manager):
+    def get_queryset(self):
+        from threatbook_xadmin.wsgi import scheduler
+
+        # 更新job状态到JobInfo表
+        jobs = scheduler.get_jobs()
+        for job in jobs:
+            job_info = JobInfo.default_objects.filter(job_id=job.id).first()
+            if job_info:
+                job_info.next_run_time = job.next_run_time
+                job_info.save(refresh_next_run_time=True)
+
+        query_set = JobInfo.default_objects.all()
+        return query_set
+
+
+def get_uuid_str():
+    return str(uuid.uuid4())
+
 
 class JobInfo(models.Model):
     func_help_text = f"""
@@ -157,11 +208,13 @@ class JobInfo(models.Model):
     示例:
     scheduler_jobs.tasks:test
     """
-    job_id = models.CharField(max_length=100, verbose_name='任务id', default=uuid.uuid4)
-    trigger_kwargs = JSONField(verbose_name='触发器及其他参数')
+    job_id = models.CharField(max_length=100, verbose_name='任务id', default=get_uuid_str)
+    trigger_kwargs = JSONField(verbose_name='触发器及其他参数)', default=dict, blank=True, help_text="next_run_time支持特殊字符串now")
     next_run_time = models.DateTimeField(verbose_name='下次运行时间', null=True)
+    run_right_now = models.BooleanField(verbose_name="是否立即执行", default=False)
     func = models.CharField(max_length=100, verbose_name='执行函数', help_text=func_help_text)
-    func_args = JSONField(verbose_name='函数执行参数, 传递一个数组')
+    func_args = JSONField(verbose_name='函数执行参数, 传递一个数组', default=list, blank=True)
+    is_paused = models.BooleanField(verbose_name='是否暂停', default=False)
     create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     update_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)
 
@@ -171,66 +224,116 @@ class JobInfo(models.Model):
     class Meta:
         verbose_name = '定时任务'
         verbose_name_plural = verbose_name
-        ordering = ('update_time',)
+        ordering = ('-next_run_time',)
 
     def get_trigger_kwargs(self):
         return mark_safe(f"<pre>{json.dumps(self.trigger_kwargs)}</pre>")
 
     get_trigger_kwargs.short_description = '触发器及其他参数'
-		def get_func_args(self):
+
+    def get_func_args(self):
         return mark_safe(f"<pre>{json.dumps(self.func_args, ensure_ascii=False)}</pre>")
 
     get_func_args.short_description = '函数执行参数'
+
     def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
+             update_fields=None, refresh_next_run_time=False):
+        if refresh_next_run_time:
+            logger.info(f"刷新{self.job_id} next_run_time {self.next_run_time}")
+            super(JobInfo, self).save()
+            return
         from threatbook_xadmin.wsgi import scheduler
-        old_obj = JobInfo.default_objects.filter(job_id=self.job_id).first()
-        if not old_obj:
-            # 新增
+
+        # 暂停状态, 删除任务
+        if self.is_paused:
+            logger.info(f"任务{self.job_id} 为暂停状态")
             try:
+                scheduler.remove_job(self.job_id)
+            except JobLookupError as e:
+                pass
+            super(JobInfo, self).save()
+            return
+
+        old_obj = JobInfo.objects.filter(job_id=self.job_id).first()
+        if not old_obj:
+            try:
+                logger.info(f"新增任务{self.job_id}")
+                # 支持特定字符串now
+                if self.run_right_now:
+                    self.trigger_kwargs["next_run_time"] = (datetime.now() + timedelta(seconds=3)).strftime(
+                        "%Y-%m-%d %H:%M:%S")
                 job = scheduler.add_job(self.func, args=self.func_args, id=self.job_id,
                                         **self.trigger_kwargs,
-                                        replace_existing=True)
+                                        replace_existing=True, misfire_grace_time=1000)
             except LookupError as e:
                 logger.exception(e)
                 raise LookupError(f"定时任务初始化失败, 不能导入 {self.func}")
-            self.next_run_time = job.next_run_time
+            self.next_run_time = str(job.next_run_time)
             super(JobInfo, self).save()
         else:
             # 修改
-            if old_obj.func == self.func \
-                    and old_obj.func_args == self.func_args \
-                    and old_obj.trigger_kwargs == self.trigger_kwargs:
-                # next_run_time更新
-                super(JobInfo, self).save()
-            else:
-                # 修改不用删除再添加,直接添加就行, id一样,并且replace_existing=True就会覆盖掉
-
-                # try:
-                #     scheduler.remove_job(self.job_id)
-                # except JobLookupError as e:
-                #     logger.warning(f'{self.job_id} 任务未找到')
-                try:
-                    job = scheduler.add_job(self.func, args=self.func_args, id=self.job_id,
-                                            **self.trigger_kwargs,
-                                            replace_existing=True)
-                except LookupError as e:
-                    logger.exception(e)
-                    raise LookupError(f"定时任务初始化失败, 不能导入 {self.func}")
-                self.next_run_time = job.next_run_time
-                super(JobInfo, self).save()
+            """
+            修改不用删除再添加,直接添加就行, id一样,并且replace_existing=True就会覆盖掉
+            """
+            try:
+                logger.info(f"修改任务{self.job_id}")
+                # 支持特定字符串now
+                if self.run_right_now:
+                    self.trigger_kwargs["next_run_time"] = (datetime.now() + timedelta(seconds=3)).strftime(
+                        "%Y-%m-%d %H:%M:%S")
+                job = scheduler.add_job(self.func, args=self.func_args, id=self.job_id,
+                                        **self.trigger_kwargs,
+                                        replace_existing=True, misfire_grace_time=1000)
+            except LookupError as e:
+                logger.exception(e)
+                raise LookupError(f"定时任务初始化失败, 不能导入 {self.func}")
+            self.next_run_time = str(job.next_run_time)
+            super(JobInfo, self).save()
 
     def delete(self, using=None, keep_parents=False):
         from threatbook_xadmin.wsgi import scheduler
         job_id = self.job_id
-        scheduler.remove_job(job_id)
+        logger.info(f"删除任务{job_id}")
+        try:
+            scheduler.remove_job(job_id)
+        except JobLookupError as e:
+            logger.error(f"任务{job_id}不存在")
+
         super(JobInfo, self).delete(using=using, keep_parents=keep_parents)
+
+
+class Connection(models.Model):
+    server_alias_name = models.CharField(max_length=100, verbose_name='服务器别名')
+    server_host = models.CharField(max_length=100, verbose_name="服务器host")
+    server_port = models.IntegerField(verbose_name="服务器端口")
+    user_name = models.CharField(max_length=100, verbose_name='用户名')
+    use_ssh_key = models.BooleanField(verbose_name="是否使用ssh秘钥认证")
+    password = models.CharField(max_length=100, verbose_name="密码", null=True, blank=True)
+    private_key_path = models.CharField(max_length=1000, verbose_name='秘钥地址', default='~/.ssh/id_rsa', null=True,
+                                        blank=True)
+
+    class Meta:
+        verbose_name = '服务器连接'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.server_alias_name
 
 ```
 
 这里, 如果记录不存在,则是新增, 直接添加任务, 添加完取得`next_run_time`信息, 并更新表( 没有用信号的好处,这里可以用super的save直接保存, 如果用了信号, 又会进入信号函数). 
 
 记录存在的话, 修改. 修改的时候, 如果定时信息没有变化,直接调用super的save, 也就是只更改了`next_run_time`. 如果有变化,~~先删除,再添加~~ 直接添加, 并把replace_existing设置为True
+
+
+
+#### 第四个问题
+
+每次查询的时候查询任务状态, 需要调用`scheduler.get_jobs`来更新`next_run_time`字段信息. 这里每次查询的时候触发, 是表级别的操作, 可以通过自定义manager来解决
+
+见上面代码
+
+#### 第五个问题
 
 这里又有一个坑点, 我是通过xadmin操作表来debug的. 修改没有问题, 删除的时候, 不进入delete方法. 最终查资料发现, delete是xadmin里面的一个action. action里面调用的是`filter_hook`方法`def delete_models(self, queryset): , 而不是直接调用delete, 所以可以在`OptionClass里实现这个方法, 用这个方法遍历再调用models实例的delete方法
 
@@ -256,41 +359,7 @@ class JobInfoAdmin:
 xadmin.site.register(JobInfo, JobInfoAdmin)
 ```
 
-#### 第四个问题
 
-每次查询的时候查询任务状态, 需要调用`scheduler.get_jobs`来更新`next_run_time`字段信息. 这里每次查询的时候触发, 是表级别的操作, 可以通过自定义manager来解决
-
-**models.py**
-
-```python
-import json
-import logging
-import uuid
-
-from django.contrib.postgres.fields import JSONField
-from django.db import models
-from django.utils.safestring import mark_safe
-
-logger = logging.getLogger("threatbook_xadmin")
-
-
-class JobInfoManager(models.Manager):
-    def get_queryset(self):
-        from threatbook_xadmin.wsgi import scheduler
-
-        # 更新job状态到JobInfo表
-        jobs = scheduler.get_jobs()
-        for job in jobs:
-            job_info = JobInfo.default_objects.filter(job_id=job.id).first()
-            if job_info:
-                job_info.next_run_time = job.next_run_time
-                job_info.save()
-
-        query_set = JobInfo.default_objects.all()
-        return query_set
-
-
-```
 
 ### 最后
 
