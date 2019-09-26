@@ -83,7 +83,7 @@ from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 import logging
 
 logger = logging.getLogger("threatbook_xadmin")
-logger.info("正在重启")
+logger.info("\n\n\n正在重启")
 # 原来使用SqlalchemyJobStore来配置不生效. 后来发现是配置有问题, 最后使用字符串进行的配置.
 # apscheduler有对应的entry point, 会根据字符串找到对应的类来处理
 jobstores = {
@@ -98,7 +98,7 @@ from scheduler_jobs.models import JobInfo
 
 for m in JobInfo.objects.all():
     m.save()
-logger.info("重启完成")
+logger.info("重启完成\n\n\n")
 
 ```
 
@@ -116,43 +116,6 @@ gunicorn -c gunicorn_config.py "$app_name".wsgi --preload -D
 
 本着最少字段的原则, 发现需要记录的有任务的id(方便追踪), 触发器的参数(cron触发 date触发 interval触发 以及触发时间, 都可以通过json来让前端传递过来,这样最灵活) 下次执行时间(从apscheduler里取出来,方便前端查看) 执行的函数(可以直接通过字符串来指定) 函数的参数, 再加创建时间 修改时间.
 
-**models.py**
-
-```python
-class JobInfo(models.Model):
-    func_help_text = f"""
-    要定时执行的函数
-    格式:
-    模块路径:方法名
-    示例:
-    scheduler_jobs.tasks:test
-    """
-    job_id = models.CharField(max_length=100, verbose_name='任务id', default=uuid.uuid4)
-    trigger_kwargs = JSONField(verbose_name='触发器及其他参数')
-    next_run_time = models.DateTimeField(verbose_name='下次运行时间', null=True)
-    func = models.CharField(max_length=100, verbose_name='执行函数', help_text=func_help_text)
-    func_args = JSONField(verbose_name='函数执行参数, 传递一个数组')
-    create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
-    update_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)
-
-    objects = JobInfoManager()
-    default_objects = models.Manager()
-
-    class Meta:
-        verbose_name = '定时任务'
-        verbose_name_plural = verbose_name
-        ordering = ('update_time',)
-
-    def get_trigger_kwargs(self):
-        return mark_safe(f"<pre>{json.dumps(self.trigger_kwargs)}</pre>")
-
-    get_trigger_kwargs.short_description = '触发器及其他参数'
-    def get_func_args(self):
-        return mark_safe(f"<pre>{json.dumps(self.func_args, ensure_ascii=False)}</pre>")
-
-    get_func_args.short_description = '函数执行参数'
-```
-
 这里有一个坑点, 是如果job_id字段直接使用models.UUIDField, 貌似最简便, 但是在做filter的时候`JobInfo.objects.filter(job_id=job.id`的时候发现怎么查出来都是空集, 原来uuid类型和字符串类型无法相等, 而且如果用还要做数据库类型(uuid)和python类型(str)之间的类型转换什么的,比较麻烦, 最简单的办法是直接使用`CharField`.
 
 #### 第三个问题
@@ -160,6 +123,16 @@ class JobInfo(models.Model):
 在进行新增记录, 修改记录, 删除记录的时候, 应该自动将定时任务做相应的添加 修改 删除操作.
 
 所以可以直接复写model类的`save delete`方法. 一开始考虑的是用信号来解决. 注册接收`post_save`和`post_delete`信号来实现. 后来发现这里修改的部分, 每一次调用`save`方法都会触发信号函数, 信号函数里面还有save, 又会触发, 导致触发次数过多. 所以最后采用的覆盖默认实例方法来实现.
+
+记录存在的话, 修改. 修改的时候, 如果定时信息没有变化,直接调用super的save, 也就是只更改了`next_run_time`. 如果有变化,~~先删除,再添加~~ 直接添加, 并把replace_existing设置为True
+
+
+
+#### 第四个问题
+
+每次查询的时候查询任务状态, 需要调用`scheduler.get_jobs`来更新`next_run_time`字段信息. 这里每次查询的时候触发, 是表级别的操作, 可以通过自定义manager来解决
+
+见上面代码
 
 **models.py**
 
@@ -190,9 +163,14 @@ class JobInfoManager(models.Manager):
             job_info = JobInfo.default_objects.filter(job_id=job.id).first()
             if job_info:
                 job_info.next_run_time = job.next_run_time
-                job_info.save(refresh_next_run_time=True)
-
+                job_info.is_running = True
+                job_info.save(refresh_status=True)
+        running_job_id = {j.id for j in jobs}
         query_set = JobInfo.default_objects.all()
+        for q in query_set:
+            if q.job_id not in running_job_id:
+                q.is_running = False
+                q.save(refresh_status=True)
         return query_set
 
 
@@ -215,6 +193,7 @@ class JobInfo(models.Model):
     func = models.CharField(max_length=100, verbose_name='执行函数', help_text=func_help_text)
     func_args = JSONField(verbose_name='函数执行参数, 传递一个数组', default=list, blank=True)
     is_paused = models.BooleanField(verbose_name='是否暂停', default=False)
+    is_running = models.BooleanField(verbose_name="是否正在运行", default=False)
     create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     update_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)
 
@@ -237,16 +216,16 @@ class JobInfo(models.Model):
     get_func_args.short_description = '函数执行参数'
 
     def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None, refresh_next_run_time=False):
-        if refresh_next_run_time:
-            logger.info(f"刷新{self.job_id} next_run_time {self.next_run_time}")
+             update_fields=None, refresh_status=False):
+        if refresh_status:
+            # logger.info(f"刷新{self.job_id} 状态 {self.next_run_time} {self.is_running}")
             super(JobInfo, self).save()
             return
         from threatbook_xadmin.wsgi import scheduler
 
         # 暂停状态, 删除任务
         if self.is_paused:
-            logger.info(f"任务{self.job_id} 为暂停状态")
+            # logger.info(f"任务{self.job_id} 为暂停状态")
             try:
                 scheduler.remove_job(self.job_id)
             except JobLookupError as e:
@@ -257,7 +236,7 @@ class JobInfo(models.Model):
         old_obj = JobInfo.objects.filter(job_id=self.job_id).first()
         if not old_obj:
             try:
-                logger.info(f"新增任务{self.job_id}")
+                # logger.info(f"新增任务{self.job_id}")
                 # 支持特定字符串now
                 if self.run_right_now:
                     self.trigger_kwargs["next_run_time"] = (datetime.now() + timedelta(seconds=3)).strftime(
@@ -276,7 +255,7 @@ class JobInfo(models.Model):
             修改不用删除再添加,直接添加就行, id一样,并且replace_existing=True就会覆盖掉
             """
             try:
-                logger.info(f"修改任务{self.job_id}")
+                # logger.info(f"修改任务{self.job_id}")
                 # 支持特定字符串now
                 if self.run_right_now:
                     self.trigger_kwargs["next_run_time"] = (datetime.now() + timedelta(seconds=3)).strftime(
@@ -293,7 +272,7 @@ class JobInfo(models.Model):
     def delete(self, using=None, keep_parents=False):
         from threatbook_xadmin.wsgi import scheduler
         job_id = self.job_id
-        logger.info(f"删除任务{job_id}")
+        # logger.info(f"删除任务{job_id}")
         try:
             scheduler.remove_job(job_id)
         except JobLookupError as e:
@@ -321,17 +300,7 @@ class Connection(models.Model):
 
 ```
 
-这里, 如果记录不存在,则是新增, 直接添加任务, 添加完取得`next_run_time`信息, 并更新表( 没有用信号的好处,这里可以用super的save直接保存, 如果用了信号, 又会进入信号函数). 
 
-记录存在的话, 修改. 修改的时候, 如果定时信息没有变化,直接调用super的save, 也就是只更改了`next_run_time`. 如果有变化,~~先删除,再添加~~ 直接添加, 并把replace_existing设置为True
-
-
-
-#### 第四个问题
-
-每次查询的时候查询任务状态, 需要调用`scheduler.get_jobs`来更新`next_run_time`字段信息. 这里每次查询的时候触发, 是表级别的操作, 可以通过自定义manager来解决
-
-见上面代码
 
 #### 第五个问题
 
