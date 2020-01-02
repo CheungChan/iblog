@@ -30,8 +30,10 @@ plugins:
   - jekyll-paginate
   - jekyll-sitemap
   - jemoji
+  - jekyll-remote-theme
 
 theme: jekyll-text-theme
+remote-theme: jekyll-text-theme
 text_skin: forest
 highlight_theme: tomorrow-night-eighties #tomorrow-night-bright
 lang: zh-CN
