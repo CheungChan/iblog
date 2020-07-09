@@ -82,12 +82,12 @@ comments:
   visitor: true
   avatar: "monsterid"
 
-pageview:
-  provider: leancloud
-  leancloud:
-    app_id    : "4U8opX196aOmdRP9NXHz71u5-gzGzoHsz"
-    app_key   : "CTmWeRSov5qVG95hVN98RNiT"
-    app_class : "Test"
+# pageview:
+#   provider: leancloud
+#   leancloud:
+#     app_id    : "4U8opX196aOmdRP9NXHz71u5-gzGzoHsz"
+#     app_key   : "CTmWeRSov5qVG95hVN98RNiT"
+#     app_class : "Test"
     
 analytics:
   provider: google
