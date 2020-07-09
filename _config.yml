@@ -41,7 +41,7 @@ timezone: Asia/Shanghai
 repository: cheungchan/iblog
 excerpt_separator: <!--more-->
 excerpt_type: html
-license: CC-BY-NC-4.0
+# license: CC-BY-NC-4.0
 toc:
   selectors: "h1,h2,h3,h4"
 defaults:
