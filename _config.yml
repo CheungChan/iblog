@@ -95,9 +95,9 @@ analytics:
     tracking_id: "UA-140963197-1"
     anonymize_ip: false
  # 对 css 和 js 资源的 cdn 加速配置
-cdn:
-  jsdelivr:
-    enabled: true
+# cdn:
+#   jsdelivr:
+#     enabled: true
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
