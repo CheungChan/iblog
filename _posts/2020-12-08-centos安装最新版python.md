@@ -17,8 +17,9 @@ centos上面安装最新版python
 python3.6可以直接 yum install python36即可。后面的版本需要编译安装
 
 ```bash
+#version=3.7.9
 version=3.9.1
-sudo yum install gcc openssl-devel bzip2-devel libffi-devel zlib-devel 
+sudo yum install -y  gcc openssl-devel bzip2-devel libffi-devel zlib-devel 
 wget https://www.python.org/ftp/python/$version/Python-$version.tgz 
 tar xzf Python-$version.tgz 
 
