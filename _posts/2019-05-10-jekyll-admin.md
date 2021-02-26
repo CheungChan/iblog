@@ -1,5 +1,5 @@
 ---
-title: 使用jekyll-admin实现在富文本web编写github pages静态博客
+title: jekyll-admin
 key: use_jeyll_admin
 layout: article
 date: '2019-05-10 16:15:33'
