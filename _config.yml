@@ -13,10 +13,10 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: 阿章²⁰²⁰
+title: 阿章的革命根据地
 email: 1377699408@qq.com
 description: >- # this means to ignore newlines until "baseurl:"
-  技术 做饭 生活 感想
+  阿章的革命根据地
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://blog.azhangbaobao.cn" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: CheungChan137
@@ -76,7 +76,7 @@ comments:
   valine:
     app_id  : "4U8opX196aOmdRP9NXHz71u5-gzGzoHsz"
     app_key : "CTmWeRSov5qVG95hVN98RNiT"
-  placeholder: "快来留下你的评论吧^_^"
+  placeholder: "来踩踩吧"
   lang: "zh-cn"
   notify: true
   visitor: true
