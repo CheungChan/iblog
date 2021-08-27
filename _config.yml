@@ -74,8 +74,8 @@ chart: true
 comments:
   provider: valine
   valine:
-    app_id  : "4U8opX196aOmdRP9NXHz71u5-gzGzoHsz"
-    app_key : "CTmWeRSov5qVG95hVN98RNiT"
+    app_id  : "m1U7NfG0sjUkikIaevPIJowY-gzGzoHsz"
+    app_key : "YoUgvxSNSoPmRUwNPyjL1q6I"
   placeholder: "来踩踩吧"
   lang: "zh-cn"
   notify: true
