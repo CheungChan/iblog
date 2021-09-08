@@ -54,4 +54,4 @@ typora-root-url: ../../iblog
 
  这样才算正式生效.
 
-![](http://img.azhangbaobao.cn/img/image-20190529150337847.png)
+![](https://imgs.zhangbaobao.cn/img/image-20190529150337847.png)

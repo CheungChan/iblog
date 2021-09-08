@@ -100,6 +100,6 @@ xadmin.site.register_view("testview/", TestView, name="testview")
 
 效果图:
 
-![](http://img.azhangbaobao.cn/img/20190718172147.png)
+![](https://imgs.zhangbaobao.cn/img/20190718172147.png)
 
 ### 

@@ -50,5 +50,5 @@ class CaseAdmin:
 
 点击+ 即可新增多个
 
-![](http://img.azhangbaobao.cn/img/20190718132851.png)
+![](https://imgs.zhangbaobao.cn/img/20190718132851.png)
 

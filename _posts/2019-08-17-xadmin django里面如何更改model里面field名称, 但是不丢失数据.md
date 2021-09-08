@@ -89,7 +89,7 @@ migrations.AlterField(
 
 之后执行`python manage.py migrate`之后如图. 原来修改人的数据都移动到了创建人里面,新增了修改人字段
 
-![](http://img.azhangbaobao.cn/img/20190725193025.png)
+![](https://imgs.zhangbaobao.cn/img/20190725193025.png)
 
 原先的保存逻辑修改为
 

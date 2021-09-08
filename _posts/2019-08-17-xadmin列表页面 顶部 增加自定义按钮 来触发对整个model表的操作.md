@@ -80,4 +80,4 @@ xadmin.site.register_plugin(SendHuntingRulesPlugin, ListAdminView)
 
 效果图:
 
-![](http://img.azhangbaobao.cn/img/20190809163420.png)
+![](https://imgs.zhangbaobao.cn/img/20190809163420.png)

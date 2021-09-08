@@ -55,7 +55,7 @@ sudo python3.7 get-pip.py
 
     就可以看到具体的centos版本
 
-    ![](http://img.azhangbaobao.cn/img/image-20190529175359294.png)
+    ![](https://imgs.zhangbaobao.cn/img/image-20190529175359294.png)
 
        
 
@@ -67,7 +67,7 @@ sudo python3.7 get-pip.py
     cat /etc/lsb-release
     ```
 
-    ​	就可以看到具体的ubutnu系统版本    ![](http://img.azhangbaobao.cn/img/image-20190531165450552.png)
+    ​	就可以看到具体的ubutnu系统版本    ![](https://imgs.zhangbaobao.cn/img/image-20190531165450552.png)
 
 1. 安装依赖
 

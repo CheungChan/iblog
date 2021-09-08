@@ -162,7 +162,7 @@ xadmin.site.register(Notes, NotesAdmin)
 
 定义完之后需要执行`python manage.py makemigrations`和`pyhton manage.py migrate` 因为django在2.2版本之前, 有一个bug, model proxy生成的权限的content type是被继承的model, 而不是model proxy导致 赋给用户权限的时候不能正常使用.  但是xadmin目前不支持django 2.2, 最高支持到2.0.12, 所以使用办法在对应app目录下新建一个文件
 
-![](http://img.azhangbaobao.cn/img/20190718172413.png)
+![](https://imgs.zhangbaobao.cn/img/20190718172413.png)
 
 **apps/thehive/management/commands/fix_permissions.py**
 
@@ -223,7 +223,7 @@ class QuzhengJiChuzhijianyi(Case):
 
 页面上有5个管理, 实际数据库在一张表里面. 只是report_type字段类型不同
 
-![](http://img.azhangbaobao.cn/img/20190718171613.png)
+![](https://imgs.zhangbaobao.cn/img/20190718171613.png)
 
 
 

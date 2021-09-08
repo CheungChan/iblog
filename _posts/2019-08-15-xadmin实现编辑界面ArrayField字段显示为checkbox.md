@@ -22,4 +22,4 @@ class YaraRulesetAdmin:
 
 显示效果
 
-![](http://img.azhangbaobao.cn/img/20190815153244.png)
+![](https://imgs.zhangbaobao.cn/img/20190815153244.png)
