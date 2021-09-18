@@ -1,5 +1,5 @@
 ---
-Title:docker-compose搭建带有mysql数据库如何初始化数据
+Title: docker-compose搭建带有mysql数据库如何初始化数据
 key: mysql_docker_compose_init_data
 layout: article
 date: '2021-09-18 20:15:00'
