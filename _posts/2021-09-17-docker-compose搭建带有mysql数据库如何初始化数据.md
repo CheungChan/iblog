@@ -302,12 +302,12 @@ fi
 echo "build docker image $version"
 docker rmi  -f cheungchan/my_business-server:$version
 docker build -f ./Dockerfile -t  cheungchan/my_business-server:$version .
-echo "hfish docker build complete"
+echo "my_business docker build complete"
 cd mysql
 docker rmi -f cheungchan/my_business-mysql:$version
 docker build --no-cache  -f ./Dockerfile -t cheungchan/my_business-mysql:$version .
 cd ..
-echo "hfish mysql docker build complete"
+echo "my_business mysql docker build complete"
 echo "you can try modify docker-compose.yml to right version and then 'docker-compose up' now"
 ```
 
