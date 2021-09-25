@@ -22,7 +22,7 @@ mysql初始化数据放在哪里？我一开始想打包一个自己的mysql镜�
 
 #### 问题三
 
-myql的默认配置很垃圾，一般都需要自己设置编码utfmb4,设置时区等等，该如何设置，在哪里设置。
+myql的默认配置很垃圾，一般都需要自己设置编码utfmb4,设置时区等等，该如何设置，在哪里设置。还有root密码怎么根据docker-compose提供的密码进行设置。
 
 ## 思路
 
@@ -34,7 +34,9 @@ server等待mysql可以写一个wait.sh 一直判断mysql是否可以建立连�
 
 ## 解决方案
 
-![](http://img.azhangbaobao.cn/img/20210918191541.png)
+由于保护隐私的需要，项目名称已打码，配置文件中名称统一修改为my_business。
+
+![](http://img.azhangbaobao.cn/img/20210926010409.png)
 
 如图所示，在服务Dockerfile一层，新建一个wait.sh
 
@@ -49,10 +51,30 @@ user="$1"
 shift
 password="$1"
 shift
+port="$1"
+shift
 cmd="$@"
 
-echo "Waiting for mysql of default config: db:$db user:$user password:$password"
-until mysql -u"$user" -p"$password" -h 127.0.0.1
+
+# 把密码，端口替换掉
+cat>/opt/my_business/config.ini<<EOF
+
+# 其他配置部分省略掉
+[database]
+type = mysql
+max_open = 50
+max_idle = 20
+max_size = 1
+url = root:${password}@tcp(127.0.0.1:${port})/my_business?charset=utf8mb4&parseTime=true&loc=Local
+debug = true
+
+[database.logger]
+Path = logs/sql
+Level = all
+Stdout = true
+EOF
+
+until mysql -u"$user" -p"$password" -h 127.0.0.1 -P $port
 do
         >&2 echo  "mysql is not ready, please wait a minute..."
         sleep 10
@@ -67,7 +89,7 @@ exec $cmd
 ```dockerfile
 FROM alpine:latest
 
-ENV HFISH_VERSION 2.6.1
+ENV my_business_VERSION 2.6.1
 
 # Download and install glibc
 # RUN #apk update && \
@@ -79,34 +101,24 @@ RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
 RUN apk add --no-cache mysql-client
 # RUN apk add --no-cache curl
 
+COPY my_business.tar.gz /opt/my_business.tar.gz
 
-COPY hfish.tar.gz /opt/hfish.tar.gz
-COPY wait.sh /wait.sh
-
-RUN mkdir -p /opt/hfish && \
-  tar -zxvf /opt/hfish.tar.gz -C /opt/ && \
-  rm -f /opt/hfish.tar.gz
+RUN mkdir -p /opt/my_business && \
+  tar -zxvf /opt/my_business.tar.gz -C /opt/ && \
+  rm -f /opt/my_business.tar.gz
 
 EXPOSE 4433
 EXPOSE 4434
+COPY wait.sh /wait.sh
 
-WORKDIR /opt/hfish
-VOLUME ["/opt/hfish/logs"]
+WORKDIR /opt/my_business
+VOLUME ["/opt/my_business/logs"]
 
 CMD ["./server"]
 
 ```
 
-把创建用户和创建业务表的sql分别放在mysql/sql/init_user.sql和 myql/sql/init_xxx.sql里面。
-
-Init_user.sql如下
-
-```sql
-use mysql;
-update mysql.user set authentication_string = password ('123456') where user = 'root' and host = '%';
-update mysql.user set authentication_string = password ('123456') where user = 'root' and host = 'localhost';
-flush privileges;
-```
+把创建业务表的sql放在 myql/sql/init_xxx.sql里面。
 
 Init_xxx.sql忽略，你可以自己设置
 
@@ -117,8 +129,7 @@ FROM mysql:5.7
 ADD mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 WORKDIR /docker-entrypoint-initdb.d
 ENV LANG=C.UTF-8
-ADD sql/init_user.sql .
-ADD sql/init_hfish.sql .
+ADD sql/init_my_business.sql .
 
 ```
 
@@ -245,23 +256,23 @@ innodb_autoinc_lock_mode = 1
 version: "3.7"
 services:
   web:
-    image: dskyz/hfish:latest
+    image: threatbook/my_business-server:2.6.1
     network_mode: "host"
-    container_name: hfish-server # 容器名
+    container_name: my_business-server # 容器名
     restart: always
     volumes:
-      - "./logs:/opt/hfish/logs"
+      - "./logs:/opt/my_business/logs"
     depends_on:
       - db
-    command: sh /wait.sh hfish root 123456 /opt/hfish/server
+    command: sh /wait.sh my_business root 1234567 3306 /opt/my_business/server
 
   db:
-    image: cheungchan/hfish-mysql:latest
+    image: threatbook/my_business-mysql:2.6.1
 #    build: ./mysql
     restart: always
-    container_name: hfish-mysql-db # 容器名
+    container_name: my_business-mysql-db # 容器名
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=1234567
       - TZ=Asia/Shanghai
     ports:
       - 3306:3306
@@ -281,13 +292,23 @@ services:
 由于两个镜像都需要build，可以特意写一个build脚本  build.sh
 
 ```bash
-docker build  -f ./Dockerfile -t  dskyz/hfish:latest .
+if [ ! -n "$1" ] ;then
+    echo "please input version!"
+    exit 1
+else
+  version=$1
+fi
+
+echo "build docker image $version"
+docker rmi  -f cheungchan/my_business-server:$version
+docker build -f ./Dockerfile -t  cheungchan/my_business-server:$version .
 echo "hfish docker build complete"
 cd mysql
-docker build  -f ./Dockerfile -t cheungchan/hfish-mysql:latest .
+docker rmi -f cheungchan/my_business-mysql:$version
+docker build --no-cache  -f ./Dockerfile -t cheungchan/my_business-mysql:$version .
 cd ..
 echo "hfish mysql docker build complete"
-echo "you can try 'docker-compose up' now"
+echo "you can try modify docker-compose.yml to right version and then 'docker-compose up' now"
 ```
 
 打包好镜像之后再 docker-compose up
