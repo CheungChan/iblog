@@ -3,7 +3,7 @@ title: 使用django signal实现报错yara ruleset自动解析保存yara rule
 key: xadmin_signals
 layout: article
 date: '2019-08-15 11:51:00'
-tags: 技术 python
+tags:  python
 typora-root-url: ../../iblog
 ---
 

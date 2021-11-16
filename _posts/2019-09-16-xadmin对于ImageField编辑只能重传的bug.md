@@ -3,7 +3,7 @@ title: xadmin对于ImageField编辑只能重传的bug
 key: xadmin_imageField_bug
 layout: article
 date: '2019-09-16 16:45:00'
-tags: 技术 python
+tags:  python
 typora-root-url: ../../iblog
 ---
 

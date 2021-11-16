@@ -3,7 +3,7 @@ title: xadmin实现编辑界面ArrayField字段显示为checkbox
 key: xadmin_checkbox
 layout: article
 date: '2019-08-15 15:51:00'
-tags: 技术 python
+tags:  python
 typora-root-url: ../../iblog
 ---
 

@@ -3,7 +3,7 @@ title: elasticsearch查询总结
 key: elasticsearch_query
 layout: article
 date: '2019-07-02 15:20:00'
-tags: 技术 数据库
+tags: 数据库
 typora-root-url: ../../iblog
 
 ---

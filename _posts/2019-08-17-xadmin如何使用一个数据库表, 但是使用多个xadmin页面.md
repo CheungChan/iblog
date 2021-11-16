@@ -3,7 +3,7 @@ title: xadmin如何使用一个数据库表, 但是使用多个xadmin页面
 key: xadmin_proxy
 layout: article
 date: '2019-07-18 12:51:00'
-tags: 技术 xadmin
+tags:  xadmin
 typora-root-url: ../../iblog
 ---
 

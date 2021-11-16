@@ -3,7 +3,7 @@ title: xadmin如何在xadmin自定义菜单, 自定义页面
 key: xadmin_custom_url_page
 layout: article
 date: '2019-08-17 12:51:00'
-tags: 技术 xadmin
+tags: xadmin
 typora-root-url: ../../iblog
 ---
 

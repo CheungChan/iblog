@@ -3,7 +3,7 @@ title: xadmin实现textarea代码高亮
 key: xadmin_textarea_highlight
 layout: article
 date: '2019-08-15 11:51:00'
-tags: 技术 python
+tags:  python
 typora-root-url: ../../iblog
 ---
 

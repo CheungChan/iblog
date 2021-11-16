@@ -3,7 +3,7 @@ title: xadmin如何在一个model的新增或编辑页面里面内嵌另一个mo
 key: xadmin_inline
 layout: article
 date: '2019-08-17 12:51:00'
-tags: 技术 xadmin
+tags:  xadmin
 typora-root-url: ../../iblog
 ---
 

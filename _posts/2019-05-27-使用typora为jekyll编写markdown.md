@@ -3,7 +3,7 @@ title: 使用typora为jekyll编写markdown
 key: typora_write_jekyll
 layout: article
 date: '2019-05-27 19:30:00'
-tags: 技术 博客  工具
+tags: 博客  工具
 typora-root-url: ../../iblog
 
 ---

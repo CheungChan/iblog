@@ -3,7 +3,7 @@ title: xadmin字段编辑自定义样式select2效果的tags
 key: xadmin_tags
 layout: article
 date: '2019-08-15 11:51:00'
-tags: 技术 python
+tags:  python
 typora-root-url: ../../iblog
 ---
 

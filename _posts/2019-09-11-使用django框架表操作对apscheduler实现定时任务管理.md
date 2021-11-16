@@ -3,7 +3,7 @@ title: 通过django框架表CRUD自动对apscheduler管理实现动态定时任�
 key: django_apscheduler
 layout: article
 date: '2019-09-11 16:45:00'
-tags: 技术 python
+tags:  python
 typora-root-url: ../../iblog
 ---
 

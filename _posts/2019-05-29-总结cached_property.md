@@ -3,7 +3,7 @@ title: 总结epoll
 key: sumarry_epoll
 layout: article
 date: '2019-05-29 16:57:00'
-tags: 技术 总结 linux
+tags: 总结 linux
 typora-root-url: ../../iblog
 ---
 

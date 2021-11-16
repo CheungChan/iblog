@@ -3,7 +3,7 @@ title: xadmin列表页面 顶部 增加自定义按钮 来触发对整个model�
 key: xadmin_add_button
 layout: article
 date: '2019-08-17 12:51:00'
-tags: 技术 xadmin
+tags:  xadmin
 typora-root-url: ../../iblog
 ---
 

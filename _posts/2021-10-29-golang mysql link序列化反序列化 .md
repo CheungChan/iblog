@@ -3,7 +3,7 @@ Title: golang mysql link序列化反序列化
 key: goland_mysql_dump_load
 layout: article
 date: '2021-10-29 15:50:00'
-tags: 技术 go
+tags:  go
 typora-root-url: ../../iblog
 
 ---

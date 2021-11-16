@@ -3,7 +3,7 @@ title: tmux多session管理
 key: tmux_multi_session
 layout: article
 date: '2020-12-16 17:00:00'
-tags: 技术 linux
+tags:  linux
 typora-root-url: ../../iblog
 
 ---

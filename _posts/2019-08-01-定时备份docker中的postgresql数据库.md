@@ -3,7 +3,7 @@ title: 定是备份docker中的postgresql数据库
 key: crontab_bak_postgressql
 layout: article
 date: '2019-08-01 17:51:00'
-tags: 技术 linux 数据库 docker
+tags: linux 数据库 docker
 typora-root-url: ../../iblog
 ---
 

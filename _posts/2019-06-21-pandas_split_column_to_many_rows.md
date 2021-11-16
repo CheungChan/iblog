@@ -3,7 +3,7 @@ title: 使用pandas将一列用分隔符隔开的数据变成多行
 key: pandas_split_column_to_many_rows
 layout: article
 date: '2019-06-21 11:20:00'
-tags: 技术 python 数据分析
+tags: python 数据分析
 typora-root-url: ../../iblog
 
 ---

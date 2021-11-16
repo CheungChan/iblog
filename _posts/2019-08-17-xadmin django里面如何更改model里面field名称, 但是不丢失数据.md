@@ -3,7 +3,7 @@ title: xadmin django里面如何更改model里面field名称, 但是不丢失数
 key: xadmin_rename_field
 layout: article
 date: '2019-08-17 12:51:00'
-tags: 技术 xadmin
+tags:  xadmin
 typora-root-url: ../../iblog
 ---
 

@@ -3,7 +3,7 @@ title: linux安装python3.7
 key: linux_install_python3.7
 layout: article
 date: '2019-05-24 20:00:00'
-tags: 技术 python linux
+tags: python linux
 typora-root-url: ../../iblog
 ---
 

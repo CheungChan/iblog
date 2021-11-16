@@ -3,7 +3,7 @@ title: centos安装最新版python
 key: centosnewpython
 layout: article
 date: '2020-12-08 17:00:00'
-tags: 技术 python
+tags:  python
 typora-root-url: ../../iblog
 
 ---

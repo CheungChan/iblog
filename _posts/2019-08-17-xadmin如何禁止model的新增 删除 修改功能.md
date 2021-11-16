@@ -3,7 +3,7 @@ title: xadmin如何禁止model的新增 删除 修改功能
 key: xadmin_readonly
 layout: article
 date: '2019-08-17 12:51:00'
-tags: 技术 xadmin
+tags:  xadmin
 typora-root-url: ../../iblog
 ---
 

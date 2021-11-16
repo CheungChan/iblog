@@ -3,7 +3,7 @@ title: 使用django-rest-framework保存models数据的时候上传多张图片
 key: drf_multi_images
 layout: article
 date: '2019-08-29 15:35:00'
-tags: 技术 python
+tags:  python
 typora-root-url: ../../iblog
 ---
 

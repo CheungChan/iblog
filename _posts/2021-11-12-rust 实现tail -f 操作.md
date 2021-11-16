@@ -3,7 +3,7 @@ Title: rust实现tail -f
 key: rust_tail
 layout: article
 date: '2021-11-12 16:50:00'
-tags: 技术 rust
+tags:  rust
 typora-root-url: ../../iblog
 
 ---
