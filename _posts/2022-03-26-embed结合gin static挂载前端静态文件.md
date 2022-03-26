@@ -8,7 +8,7 @@ typora-root-url: ../../iblog
 
 ---
 
-# embed结合gin static挂载静态文件
+
 
 当前端打包之后生成一些静态文件，我希望使用go提供的`embed`机制能够将前端文件打包到二进制里面，同时web端访问肯定希望通过gin的staticFS挂载，一举两得。但是如果不至于直接`router.StaticFS("/", http.FS(h5Fs))`会404，需要注意。
 
