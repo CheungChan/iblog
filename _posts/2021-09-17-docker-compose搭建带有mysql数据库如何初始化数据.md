@@ -256,7 +256,7 @@ innodb_autoinc_lock_mode = 1
 version: "3.7"
 services:
   web:
-    image: threatbook/my_business-server:2.6.1
+    image: xxx/my_business-server:2.6.1
     network_mode: "host"
     container_name: my_business-server # 容器名
     restart: always
@@ -267,7 +267,7 @@ services:
     command: sh /wait.sh my_business root 1234567 3306 /opt/my_business/server
 
   db:
-    image: threatbook/my_business-mysql:2.6.1
+    image: xxx/my_business-mysql:2.6.1
 #    build: ./mysql
     restart: always
     container_name: my_business-mysql-db # 容器名

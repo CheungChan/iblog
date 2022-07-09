@@ -61,7 +61,7 @@ else:
 
 ```python
 """
-WSGI config for threatbook_xadmin project.
+WSGI config for xxx_xadmin project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -73,7 +73,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'threatbook_xadmin.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'xxx_xadmin.settings')
 
 application = get_wsgi_application()
 # 初始化定时任务, 放在wsgi里, 被gunicorn 的 master 执行完, worker进程再fork, 这样不会fork多份
@@ -82,7 +82,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 import logging
 
-logger = logging.getLogger("threatbook_xadmin")
+logger = logging.getLogger("xxx_xadmin")
 logger.info("\n\n\n正在重启")
 # 原来使用SqlalchemyJobStore来配置不生效. 后来发现是配置有问题, 最后使用字符串进行的配置.
 # apscheduler有对应的entry point, 会根据字符串找到对应的类来处理
@@ -150,12 +150,12 @@ from django.utils.safestring import mark_safe
 from apscheduler.schedulers.base import JobLookupError
 from datetime import datetime, timedelta
 
-logger = logging.getLogger("threatbook_xadmin")
+logger = logging.getLogger("xxx_xadmin")
 
 
 class JobInfoManager(models.Manager):
     def get_queryset(self):
-        from threatbook_xadmin.wsgi import scheduler
+        from xxx_xadmin.wsgi import scheduler
 
         # 更新job状态到JobInfo表
         jobs = scheduler.get_jobs()
@@ -221,7 +221,7 @@ class JobInfo(models.Model):
             # logger.info(f"刷新{self.job_id} 状态 {self.next_run_time} {self.is_running}")
             super(JobInfo, self).save()
             return
-        from threatbook_xadmin.wsgi import scheduler
+        from xxx_xadmin.wsgi import scheduler
 
         # 暂停状态, 删除任务
         if self.is_paused:
@@ -270,7 +270,7 @@ class JobInfo(models.Model):
             super(JobInfo, self).save()
 
     def delete(self, using=None, keep_parents=False):
-        from threatbook_xadmin.wsgi import scheduler
+        from xxx_xadmin.wsgi import scheduler
         job_id = self.job_id
         # logger.info(f"删除任务{job_id}")
         try:
@@ -343,7 +343,7 @@ __date__ = '2019/9/10 18:19'
 from emails.models import Email
 import logging
 
-logger = logging.getLogger("threatbook_xadmin")
+logger = logging.getLogger("xxx_xadmin")
 
 
 def test(*args):
@@ -353,10 +353,10 @@ def test(*args):
 def send_emails(receivers, subject, content, attachments_path_list):
     """
     参数示例:
-    [["chenzhang@threatbook.cn"],
+    [["chenzhang@xxx.cn"],
     "测试标题",
     "<h1>测试内容</h1>",
-    ["/Users/chenzhang/PycharmProjects/threatbook_xadmin/apps/scheduler_jobs/tasks.py"]
+    ["/Users/chenzhang/PycharmProjects/xxx_xadmin/apps/scheduler_jobs/tasks.py"]
     ]
     :param receivers:
     :param subject:

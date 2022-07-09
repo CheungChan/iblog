@@ -35,7 +35,7 @@ from utils.hunting import HuntingUtils
 from utils.exceptions import YaraRuleParseException
 import logging
 
-logger = logging.getLogger("threatbook_xadmin")
+logger = logging.getLogger("xxx_xadmin")
 
 
 @receiver(post_save, sender=YaraRuleset)

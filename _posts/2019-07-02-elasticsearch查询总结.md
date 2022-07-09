@@ -37,7 +37,7 @@ GET /domain_ip_log_*/_search
     "bool": {
       "filter": {
         "term": {
-          "sourceIP": "10.10.67.25"
+          "sourceIP": "1.1.1.1"
         }
       }
     }
@@ -58,7 +58,7 @@ GET /domain_ip_log_*/_search
     "bool": {
       "filter": {
         "match_phrase": {
-          "User": "makai@threatbook.cn"
+          "User": "bulabula"
         }
       }
     }
@@ -72,7 +72,7 @@ GET /domain_ip_log_*/_search
 {
      "match": {
      "User": {
-          "query": "makai@threatbook.cn",
+          "query": "bulabula",
           "type": "phrase"
          }
       }
@@ -102,7 +102,7 @@ GET /domain_ip_log_*/_search
             {
               "match": {
                 "User": {
-                  "query": "makai@threatbook.cn",
+                  "query": "bulabula",
                   "type": "phrase"
                 }
               }
@@ -135,7 +135,7 @@ GET /domain_ip_log_*/_search
             },
             {
               "match_phrase": {
-                "User": "makai@threatbook.cn"
+                "User": "bulabula"
               }
             }
           ]

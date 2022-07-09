@@ -170,9 +170,9 @@ DROP TABLE IF EXISTS backup_tbl;
 创建备份数据库:
 
 ```sql
-create database threatbook_prod_bak_20190722  owner threatbook;
+create database xxx_prod_bak_20190722  owner xxx;
 
-grant all privileges on database threatbook_prod_bak_20190722 to threatbook;
+grant all privileges on database xxx_prod_bak_20190722 to xxx;
 ```
 
 ### docker镜像中的postgresql 备份还原
@@ -180,13 +180,13 @@ grant all privileges on database threatbook_prod_bak_20190722 to threatbook;
 备份:
 
 ```bash
-docker exec -t postgresql  pg_dump -U threatbook -d threatbook > dump_`date +%Y-%m-%d"_"%H_%M_%S`.sql
+docker exec -t postgresql  pg_dump -U xxx -d xxx > dump_`date +%Y-%m-%d"_"%H_%M_%S`.sql
 ```
 
 还原:
 
 ```bash
- cat dump_2019-08-01_15_18_06.sql| docker exec -i postgresql  psql -U threatbook
+ cat dump_2019-08-01_15_18_06.sql| docker exec -i postgresql  psql -U xxx
 ```
 
 
