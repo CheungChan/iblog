@@ -14,5 +14,3 @@ run '~/.tmux/plugins/tpm/tpm'
 EOF
 yum install -y git
 git clone https://gitee.com/guanvi/tpm  ~/.tmux/plugins/tpm
-git clone https://gitee.com/wuxler/tmux-sensible ~/.tmux/plugins/tpm-sensible
-git clone https://gitee.com/yuruilee/tmux-resurrect  ~/.tmux/plugins/tpm-resurrect
